@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Atharav Furniture</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial;background:#f5f5f5}
+header{background:#6b4f2c;color:#fff;padding:40px;text-align:center}
+nav{background:#fff;padding:15px;text-align:center}
+nav a{margin:0 15px;color:#6b4f2c;font-weight:bold;text-decoration:none}
+.section{padding:40px;max-width:1100px;margin:auto}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#fff;padding:15px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
+.card img{width:100%;height:200px;object-fit:cover;border-radius:6px}
+.admin{background:#fff;padding:20px;max-width:400px;margin:40px auto;border-radius:8px}
+.admin input,.admin button{width:100%;padding:10px;margin:10px 0}
+.admin button{background:#6b4f2c;color:#fff;border:none}
+footer{background:#2f251c;color:#ddd;text-align:center;padding:20px}
+#wa{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;padding:15px;border-radius:50%;text-decoration:none}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Atharav Furniture</h1>
+<p>Premium Wooden Furniture</p>
+</header>
+
+<nav>
+<a href="#">Home</a>
+<a href="#products">Products</a>
+<a href="#contact">Contact</a>
+</nav>
+
+<section class="section" id="products">
+<h2>Our Products</h2>
+<div class="products" id="list"></div>
+</section>
+
+<div class="admin">
+<h3>Add Product</h3>
+<input id="name" placeholder="Product name">
+<input id="image" placeholder="Image URL">
+<button onclick="add()">Add</button>
+</div>
+
+<footer id="contact">
+<p>Nimbhore, Phaltan, Satara</p>
+<p>📞 9423422391</p>
+</footer>
+
+<a id="wa" href="https://wa.me/919423422391">💬</a>
+
+<script>
+async function load(){
+ const r=await fetch('/products');
+ const d=await r.json();
+ document.getElementById('list').innerHTML='';
+ d.forEach(p=>{
+  document.getElementById('list').innerHTML+=`
+   <div class="card">
+    <img src="${p.image}">
+    <h3>${p.name}</h3>
+   </div>`;
+ });
+}
+async function add(){
+ await fetch('/add-product',{
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+   name:document.getElementById('name').value,
+   image:document.getElementById('image').value
+  })
+ });
+ load();
+}
+load();
+</script>
+
+</body>
+</html>
